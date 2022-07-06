@@ -1,4 +1,4 @@
-###LEA - 02 Interpretador de Autômatos Finitos Determinísticos###
+###Prova03 - Interpretador de Autômatos de Pilha Determinísticos###
 
 ## Instalação
 
@@ -18,4 +18,4 @@ O projeto foi desenvolvido em node.js, portanto, com o node já instalado na má
 
 Substituindo os path pelos caminhos desejados.
 
-exemplo: npm start ./afd.json ./palavras.txt
+exemplo: npm start ./dpda.json ./word.txt < output.txt

@@ -20,12 +20,11 @@ const readFile = async (filePath) => {
 const formatTxtArray = async (txtArray) => {
   let data = [];
   let lines = txtArray.split("\n");
-  lines = lines.split("\r");
+
   let array = [];
   lines.forEach((l) => {
-    array.push(l.replace(",", ""));
+    array.push(l.replace(",", "").replace("\r", ""));
   });
-
   data = array;
   return data;
 };
@@ -41,8 +40,114 @@ const main = async () => {
     return "Dont have path";
   }
 
-  console.log("dpda =>", dpdaJson);
-  console.log("word =>", words);
+  let { states, initialState, endState } = await getStates(dpdaJson);
+  let cont = 0;
+  for (const word of words) {
+    cont++;
+    const letters = word.toString().split("");
+    let state = initialState;
+    let isTrapState = false;
+    let stack = [];
+    for (const letter of letters) {
+      const process = await processValidate(state, letter, dpdaJson);
+      if (process !== null) {
+        state = process.actualState;
+        const [newStack, status] = await constructStack(
+          stack,
+          process.executeCharacter,
+          process.isPop,
+          process.isPush
+        );
+        stack = [...newStack];
+
+        if (status === false || status === null) {
+          isTrapState = true;
+          break;
+        }
+      }
+    }
+    if (isTrapState) {
+      console.log("[" + cont + "] " + word + " => REJECT");
+    }
+
+    if (stack.length > 0 || !endState.includes(state)) {
+      console.log("[" + cont + "] " + word + " => REJECT");
+    }
+
+    if (stack.length == 0 && endState.includes(state) && !isTrapState) {
+      console.log("[" + cont + "] " + word + " => ACCEPT");
+    }
+  }
+};
+
+const getStates = async (dpdaJson) => {
+  let objStates = {
+    states: [],
+    initialState: "",
+    endState: [],
+  };
+
+  objStates.states = dpdaJson["Q"];
+
+  objStates.initialState = dpdaJson["S"];
+
+  objStates.endState = dpdaJson["F"];
+
+  return objStates;
+};
+
+const constructStack = async (stack, value, isPop, isPush) => {
+  const currentStack = [...stack];
+  if (isPush) {
+    if (value === "") {
+      return [currentStack, null];
+    }
+    currentStack.push(value);
+  }
+
+  if (isPop) {
+    if (value === "") {
+      return [currentStack, null];
+    }
+
+    if (currentStack.length === 0) {
+      return [currentStack, false];
+    }
+
+    if (currentStack[currentStack.length - 1] !== value) {
+      return [currentStack, false];
+    }
+    currentStack.pop();
+  }
+
+  return [currentStack, true];
+};
+
+const processValidate = async (actualState, value, dpda) => {
+  let isPop = false;
+  let isPush = false;
+  let executeCharacter = "";
+
+  let terminal = dpda["delta"][actualState][value];
+
+  if (terminal) {
+    for (let i = 0; i < terminal.length; i++) {
+      if (terminal[i] !== "") {
+        if (i === 0) {
+          executeCharacter = terminal[i];
+          isPop = true;
+        } else if (i === 1) {
+          executeCharacter = terminal[i];
+          isPush = true;
+        }
+      }
+    }
+
+    actualState = terminal[terminal.length - 1];
+    return { actualState, isPop, isPush, executeCharacter };
+  }
+
+  return null;
 };
 
 main();

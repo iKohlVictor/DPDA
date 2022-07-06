@@ -1,0 +1,24 @@
+
+> DPDA@1.0.0 start /home/ian-kohl/Documentos/projetos/pessoal/DPDA
+> node index.js "./dpda.json" "./word.txt"
+
+[1] abb => REJECT
+[2] aab => REJECT
+[3]  => ACCEPT
+[4] bbbbaaaa => REJECT
+[5] aaaabbbb => ACCEPT
+[6] ab => ACCEPT
+[7] b => REJECT
+[8] a => REJECT
+[9] aaaab => REJECT
+[10] aabb => ACCEPT
+[11] aaabb => REJECT
+[12] abababa => REJECT
+[13] bababab => REJECT
+[14] ba => REJECT
+[15] bbbbbbbbb => REJECT
+[16] aaaaaaa => REJECT
+[17] abaa => ACCEPT
+[18] aaba => REJECT
+[19] aaaaaaaabbbbbbbb => ACCEPT
+[20] aaabbb => ACCEPT
