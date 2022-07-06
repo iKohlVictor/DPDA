@@ -1,0 +1,21 @@
+Language = ({a^n b^n | n >= 1})
+[1] abb => REJECT
+[2] aab => REJECT
+[3]  => REJECT
+[4] bbbbaaaa => REJECT
+[5] aaaabbbb => ACCEPT
+[6] ab => ACCEPT
+[7] b => REJECT
+[8] a => REJECT
+[9] aaaab => REJECT
+[10] aabb => ACCEPT
+[11] aaabb => REJECT
+[12] abababa => REJECT
+[13] bababab => REJECT
+[14] ba => REJECT
+[15] bbbbbbbbb => REJECT
+[16] aaaaaaa => REJECT
+[17] abaa => ACCEPT
+[18] aaba => REJECT
+[19] aaaaaaaabbbbbbbb => ACCEPT
+[20] aaabbb => ACCEPT
